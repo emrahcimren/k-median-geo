@@ -24,12 +24,12 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="cimren-wkmeans-geo",
-    version="1.3.4",
-    description="Weighted KMeans Clustering for Geolocational Problem",
+    name="cimren-kmedian-geo",
+    version="0.0.1",
+    description="k-Median modeling repo",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/emrahcimren/wkmeans-geo",
+    url="https://github.com/emrahcimren/k-median-geo",
     author="cimren",
     author_email="cimren.1@gmail.com",
     license="MIT",
@@ -38,12 +38,8 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
     ],
-    packages=["wkmeans_geo", "wkmeans_geo/src"],
+    packages=["kmedian_geo", "kmedian_geo/src"],
     include_package_data=True,
-    install_requires=reqs,
-    #entry_points={
-    #    "console_scripts": [
-    #        "realpython=reader.__main__:main",
-    #    ]
-    #},
+    install_requires=["setuptools", "Pathlib", "numpy", "ortools",
+                      "pandas"] + reqs,
 )
