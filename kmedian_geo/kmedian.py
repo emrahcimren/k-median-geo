@@ -6,6 +6,7 @@ def run_kmedian_or_tools_model(stores,
                                costs,
                                k,
                                enable_min_max_elements=False,
+                               enable_max_demand=False,
                                mip_gap=0.01,
                                solver_time_limit_mins=2,
                                write_lp=False):
@@ -38,7 +39,9 @@ def run_kmedian_or_tools_model(stores,
                       mi.store_demand,
                       mi.costs)
 
-    model.formulate_model(k, enable_min_max_elements)
+    model.formulate_model(k,
+                          enable_min_max_elements,
+                          enable_max_demand)
 
     model.solve_model(mip_gap,
                       solver_time_limit_mins,

@@ -48,7 +48,7 @@ class Model:
         print(text)
         sys.stdout = original
 
-    def formulate_model(self, k, enable_min_max_elements):
+    def formulate_model(self, k, enable_min_max_elements, enable_max_demand):
         '''
         Formulate OR Tools model
         :param k:
@@ -101,11 +101,12 @@ class Model:
                 )
 
         # maximum demand in facility
-        for facility in self.facilities_set:
-            self.solver.Add(
-                self.solver.Sum([self.store_demand[store] * self.store_facility_allocation_var[store, facility]
-                                 for store in self.stores_set]) <= self.facility_maximum_demand[facility]
-            )
+        if enable_max_demand:
+            for facility in self.facilities_set:
+                self.solver.Add(
+                    self.solver.Sum([self.store_demand[store] * self.store_facility_allocation_var[store, facility]
+                                     for store in self.stores_set]) <= self.facility_maximum_demand[facility]
+                )
 
         # add objective
         self.solver.Minimize(
