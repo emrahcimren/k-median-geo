@@ -10,7 +10,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'kmedian_geo')))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'kmedian_geo/src')))
 
-from kmedian_geo.src import kmedian_inputs_ortools as kmi
+from kmedian_geo.src import kmedian_inputs as kmi
 from kmedian_geo import kmedian as km
 from kmedian_geo.src import data
 
