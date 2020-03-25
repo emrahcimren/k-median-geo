@@ -1,10 +1,12 @@
 class ModelInputs:
 
     def __init__(self, stores, facilities, costs):
+
         self.stores = stores
         self.facilities = facilities
         self.costs = costs
 
+        self._create_store_facility_sets()
         self._create_store_facility_allocation_var_input()
         self._create_facility_selection_var_input()
         self._create_facility_min_max_size()
@@ -23,6 +25,14 @@ class ModelInputs:
         '''
         parameter_df = parameter_df.set_index(keys)
         return parameter_df[value].to_dict()
+
+    def _create_store_facility_sets(self):
+        '''
+        Store and facility set
+        :return:
+        '''
+        self.store_set = self.stores['LOCATION_NAME'].unique()
+        self.facility_set = self.facilities['FACILITY_NAME'].unique()
 
     def _create_store_facility_allocation_var_input(self):
         '''
@@ -50,7 +60,7 @@ class ModelInputs:
         Function to create facility selection set
         :return:
         '''
-        self.facility_selection_var_input = self.facilities['FACILITY_NAME'].unique()
+        self.facility_selection_var_input_set = self.facilities['FACILITY_NAME'].unique()
 
     def _create_facility_min_max_size(self):
         '''
