@@ -1,4 +1,4 @@
-from kmedian_geo.src import kmedian_inputs as kmi
+from kmedian_geo.src import kmedian_inputs_ortools as kmi
 
 
 def run_kmedian_or_tools_model(stores,
