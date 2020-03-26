@@ -106,7 +106,7 @@ class ModelScipopt:
         '''
 
         self.solver.setRealParam('limits/gap', mip_gap)
-        self.solver.setRealParam('limits/time', 60*60 * solver_time_limit_mins)
+        self.solver.setRealParam('limits/time', 60 * solver_time_limit_mins)
         self.solver.optimize()
         print('Number of variables in model = {}'.format(str(self.solver.getNVars())))
         print('Number of constraints in model = {}'.format(str(self.solver.getNConss())))
