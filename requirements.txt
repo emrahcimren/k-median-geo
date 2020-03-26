@@ -1,9 +1,7 @@
 certifi==2019.11.28
-numpy==1.18.2
-ortools==7.5.7466
+numpy
 pandas==1.0.3
 protobuf==3.11.3
-PySCIPOpt==2.2.3
 python-dateutil==2.8.1
 pytz==2019.3
 six==1.14.0
