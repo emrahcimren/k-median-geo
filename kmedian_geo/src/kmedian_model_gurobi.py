@@ -145,7 +145,7 @@ class ModelGurobi:
             ]
             self.store_facility_allocation_solution = store_facility_allocation_solution[store_facility_allocation_solution['VALUE'] != 0]
 
-            facility_selection_solution = self.solver.getAttr("x", self.store_facility_allocation_var)
+            facility_selection_solution = self.solver.getAttr("x", self.facility_selection_var)
             facility_selection_solution = pd.Series(facility_selection_solution).reset_index()
             facility_selection_solution.columns = [
                 "FACILITY",
