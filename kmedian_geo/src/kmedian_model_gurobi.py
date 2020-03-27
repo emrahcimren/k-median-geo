@@ -45,8 +45,11 @@ class ModelGurobi:
 
         self.solver = Model("Source to Destination Allocation")
 
-        self.store_facility_allocation_var = self.solver.addVars(self.store_facility_allocation_var_input_set, name="x")
-        self.facility_selection_var = self.solver.addVars(self.facility_selection_var_input_set, vtype=GRB.BINARY, name="y")
+        self.store_facility_allocation_var = self.solver.addVars(self.store_facility_allocation_var_input_set,
+                                                                 vtype=GRB.BINARY,
+                                                                 name="x")
+        self.facility_selection_var = self.solver.addVars(self.facility_selection_var_input_set, vtype=GRB.BINARY,
+                                                          name="y")
 
         # Objective
         objective = LinExpr()
@@ -70,7 +73,7 @@ class ModelGurobi:
         # k number of facilities is selected
         self.solver.addConstr(
             (
-                self.facility_selection_var.sum("*") == k
+                    self.facility_selection_var.sum("*") == k
             ),
             "k number of facilities is selected",
         )
@@ -109,7 +112,7 @@ class ModelGurobi:
                 self.solver.addConstr(quicksum(
                     self.store_demand[store] * self.store_facility_allocation_var[store, facility] for store in
                     self.stores_set) <=
-                                    self.facility_maximum_demand[facility])
+                                      self.facility_maximum_demand[facility])
 
     def solve_model(self,
                     mip_gap,
@@ -143,14 +146,15 @@ class ModelGurobi:
                 "FACILITY",
                 "VALUE",
             ]
-            self.store_facility_allocation_solution = store_facility_allocation_solution[store_facility_allocation_solution['VALUE'] != 0]
+            self.store_facility_allocation_solution = store_facility_allocation_solution[
+                store_facility_allocation_solution['VALUE'] != 0]
 
             facility_selection_solution = self.solver.getAttr("x", self.facility_selection_var)
             facility_selection_solution = pd.Series(facility_selection_solution).reset_index()
             facility_selection_solution.columns = [
                 "FACILITY",
                 "VALUE",
-            ]
+             ]
             self.facility_selection_solution = facility_selection_solution[facility_selection_solution['VALUE'] != 0]
 
         else:

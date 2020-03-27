@@ -48,7 +48,7 @@ class ModelScipopt:
 
         self.store_facility_allocation_var = {}
         for store, facility in self.store_facility_allocation_var_input_set:
-            self.store_facility_allocation_var[store, facility] = self.solver.addVar(vtype="C",
+            self.store_facility_allocation_var[store, facility] = self.solver.addVar(vtype="B",
                                                                                      name="x{}{}".format(store,
                                                                                                          facility))
 

@@ -60,8 +60,7 @@ class Model:
 
         self.store_facility_allocation_var = {}
         for store, facility in self.store_facility_allocation_var_input_set:
-            self.store_facility_allocation_var[store, facility] = self.solver.NumVar(0, infinity,
-                                                                                     'x[{}, {}]'.format(str(store),
+            self.store_facility_allocation_var[store, facility] = self.solver.BoolVar('x[{}, {}]'.format(str(store),
                                                                                                         str(facility)))
         self.facility_selection_var = {}
         for facility in self.facility_selection_var_input_set:
