@@ -48,7 +48,8 @@ class ModelGurobi:
         self.store_facility_allocation_var = self.solver.addVars(self.store_facility_allocation_var_input_set,
                                                                  vtype=GRB.BINARY,
                                                                  name="x")
-        self.facility_selection_var = self.solver.addVars(self.facility_selection_var_input_set, vtype=GRB.BINARY,
+        self.facility_selection_var = self.solver.addVars(self.facility_selection_var_input_set,
+                                                          vtype=GRB.BINARY,
                                                           name="y")
 
         # Objective
@@ -154,7 +155,7 @@ class ModelGurobi:
             facility_selection_solution.columns = [
                 "FACILITY",
                 "VALUE",
-             ]
+            ]
             self.facility_selection_solution = facility_selection_solution[facility_selection_solution['VALUE'] != 0]
 
         else:
