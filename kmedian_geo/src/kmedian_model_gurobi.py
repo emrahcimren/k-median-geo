@@ -1,5 +1,7 @@
 import pandas as pd
-from gurobipy import *
+from pyomo import *
+
+
 
 
 class ModelGurobi:
