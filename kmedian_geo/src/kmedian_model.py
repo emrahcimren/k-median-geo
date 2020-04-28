@@ -2,7 +2,8 @@ import pandas as pd
 from pyomo.environ import *
 
 
-def create_abstract_model(k, enable_min_max_elements, enable_max_demand):
+def create_abstract_model(enable_min_max_elements,
+                          enable_max_demand):
 
     model = AbstractModel(name="Network Flows Abstract Model")
 
@@ -16,7 +17,7 @@ def create_abstract_model(k, enable_min_max_elements, enable_max_demand):
     model.facility_max_elements = Param(model.facilities_set, within=Any)
     model.store_demand = Param(model.stores_set, within=Any)
     model.facility_maximum_demand = Param(model.facilities_set, within=Any)
-    model.k = Param(within=Any)
+    model.k = Param(initialize=1, mutable=True)
 
     # create variables
     model.store_facility_allocation_var = Var(model.store_facility_allocation_var_input_set, within=Binary)
@@ -39,9 +40,9 @@ def create_abstract_model(k, enable_min_max_elements, enable_max_demand):
     # k number of facilities is selected
     def k_facilities_rule(model):
         return sum(model.facility_selection_var[facility] \
-                   for facility in model.facilities_set) == k
+                   for facility in model.facilities_set) == model.k
 
-    model.k_facilities = Constraint([], rule=k_facilities_rule)
+    model.k_facilities = Constraint(rule=k_facilities_rule)
 
     # store can not allocated if facility is not selected
     def store_enablement_rule(model, store, facility):
@@ -97,10 +98,10 @@ def create_model_instance(model,
         'facility_max_elements': facility_max_elements,
         'store_demand': store_demand,
         'facility_maximum_demand': facility_maximum_demand,
-    },
-        'k': k}
+    }}
 
     model_instance = model.create_instance(data)
+    model_instance.k.value = k
 
     return model_instance
 
