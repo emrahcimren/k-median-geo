@@ -31,6 +31,7 @@ class ModelInputs:
         Store and facility set
         :return:
         '''
+        print('creating store facility sets')
         self.store_set = self.stores['LOCATION_NAME'].unique()
         self.facility_set = self.facilities['FACILITY_NAME'].unique()
 
@@ -39,6 +40,7 @@ class ModelInputs:
         Function to create store facility allocation sets
         :return:
         '''
+        print('creating store facility allocation var')
         facilities_input = self.facilities.copy()
         facilities_input['key'] = 0
         facilities_input = facilities_input[['FACILITY_NAME', 'key']]
@@ -60,6 +62,7 @@ class ModelInputs:
         Function to create facility selection set
         :return:
         '''
+        print('creating facility selection var')
         self.facility_selection_var_input_set = self.facilities['FACILITY_NAME'].unique()
 
     def _create_facility_min_max_size(self):
@@ -67,6 +70,7 @@ class ModelInputs:
         Facility minimum and maximum number of elements
         :return:
         '''
+        print('creating facility min max elements')
         self.facility_min_elements = self._create_parameter_dict(self.facilities, ['FACILITY_NAME'], 'MINIMUM_ELEMENTS')
         self.facility_max_elements = self._create_parameter_dict(self.facilities, ['FACILITY_NAME'], 'MAXIMUM_ELEMENTS')
 
@@ -75,6 +79,7 @@ class ModelInputs:
         Facility maximum demand
         :return:
         '''
+        print('creating facility maximum demand')
         self.facility_maximum_demand = self._create_parameter_dict(self.facilities, ['FACILITY_NAME'], 'MAXIMUM_DEMAND')
 
     def _create_store_demand(self):
@@ -82,6 +87,7 @@ class ModelInputs:
         Store demand
         :return:
         '''
+        print('creating store demand')
         self.store_demand = self._create_parameter_dict(self.stores, ['LOCATION_NAME'], 'DEMAND_UNITS')
 
     def _create_costs(self):
@@ -89,4 +95,5 @@ class ModelInputs:
         Costs between
         :return:
         '''
+        print('creating costs')
         self.costs = self._create_parameter_dict(self.costs, ['LOCATION_NAME', 'FACILITY_NAME'], 'COST')

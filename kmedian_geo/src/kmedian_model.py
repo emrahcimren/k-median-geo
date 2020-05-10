@@ -4,6 +4,15 @@ from pyomo.environ import *
 
 def create_abstract_model(enable_min_max_elements,
                           enable_max_demand):
+    '''
+    Create the abstract model
+    Args:
+        enable_min_max_elements ():
+        enable_max_demand ():
+
+    Returns:
+
+    '''
 
     model = AbstractModel(name="Network Flows Abstract Model")
 
@@ -25,6 +34,13 @@ def create_abstract_model(enable_min_max_elements,
 
     # model objective
     def obj_rule(model):
+        '''
+        Objective function
+        Args:
+            model ():
+
+        Returns:
+        '''
         return sum(model.costs[store, facility] * model.store_facility_allocation_var[store, facility] \
                    for store, facility in model.store_facility_allocation_var_input_set)
 
@@ -32,20 +48,45 @@ def create_abstract_model(enable_min_max_elements,
 
     # each store is allocated to one facility
     def store_allocation_rule(model, store):
-        return sum(model.store_facility_allocation_var[store, facility] \
-                   for facility in model.facilities_set) == 1
+        '''
+        Each store assigns to one facility
+        Args:
+            model ():
+            store ():
+
+        Returns:
+
+        '''
+        return quicksum(model.store_facility_allocation_var[store, :]) == 1
 
     model.store_allocation = Constraint(model.stores_set, rule=store_allocation_rule)
 
     # k number of facilities is selected
     def k_facilities_rule(model):
-        return sum(model.facility_selection_var[facility] \
-                   for facility in model.facilities_set) == model.k
+        '''
+        Select k facilities
+        Args:
+            model ():
+
+        Returns:
+
+        '''
+        return quicksum(model.facility_selection_var[:]) == model.k
 
     model.k_facilities = Constraint(rule=k_facilities_rule)
 
     # store can not allocated if facility is not selected
     def store_enablement_rule(model, store, facility):
+        '''
+        Enable allocation if site is selected
+        Args:
+            model ():
+            store ():
+            facility ():
+
+        Returns:
+
+        '''
         return model.store_facility_allocation_var[store, facility] <= model.facility_selection_var[facility]
 
     model.store_enablement = Constraint(model.store_facility_allocation_var_input_set, rule=store_enablement_rule)
@@ -53,27 +94,53 @@ def create_abstract_model(enable_min_max_elements,
     if enable_min_max_elements:
         # minimum elements in facility
         def min_stores_rule(model, facility):
-            return sum(model.store_facility_allocation_var[store, facility] \
-                       for store in model.stores_set) >= model.facility_min_elements[facility]
+            '''
+            Minimum stores assigned
+            Args:
+                model ():
+                facility ():
+
+            Returns:
+
+            '''
+            return quicksum(model.store_facility_allocation_var[:, facility]) >= model.facility_min_elements[facility]
 
         model.min_stores = Constraint(model.facilities_set, rule=min_stores_rule)
 
         # maximum elements in facility
         def max_stores_rule(model, facility):
-            return sum(model.store_facility_allocation_var[store, facility] \
-                       for store in model.stores_set) >= model.facility_max_elements[facility]
+            '''
+            Max stores assigned
+            Args:
+                model ():
+                facility ():
+
+            Returns:
+
+            '''
+            return quicksum(model.store_facility_allocation_var[:, facility]) >= model.facility_max_elements[facility]
 
         model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
 
     # maximum demand in facility
     if enable_max_demand:
         def max_demand_rule(model, facility):
+            '''
+            Max demand rule
+            Args:
+                model ():
+                facility ():
+
+            Returns:
+
+            '''
             return sum(model.store_demand[store] * model.store_facility_allocation_var[store, facility]
                        for store in model.stores_set) <= model.facility_maximum_demand[facility]
 
         model.max_demand = Constraint(model.facilities_set, rule=max_demand_rule)
 
     return model
+
 
 def create_model_instance(model,
                           store_facility_allocation_var_input_set,
@@ -101,7 +168,6 @@ def create_model_instance(model,
     }}
 
     model_instance = model.create_instance(data)
-    model_instance.k.value = k
 
     return model_instance
 
@@ -120,6 +186,7 @@ def solve_model(model_instance,
     solution = optimize.solve(model_instance)
 
     return solution
+
 
 def get_results(solution, model_instance, costs):
 
@@ -142,6 +209,7 @@ def get_results(solution, model_instance, costs):
         solution_store_facility_allocation = solution_store_facility_allocation.merge(solution_costs,
                                                                                       how='left',
                                                                                       on=['STORE', 'FACILITY'])
+        solution_store_facility_allocation['K'] = model_instance.k.value
 
         return solution_store_facility_allocation
 
