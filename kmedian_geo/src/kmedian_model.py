@@ -42,8 +42,7 @@ def create_abstract_model(enable_min_max_elements,
         Returns:
 
         """
-        return sum(model.costs[store, facility] * model.store_facility_allocation_var[store, facility] \
-                   for store, facility in model.store_facility_allocation_var_input_set)
+        return summation(model.costs, model.store_facility_allocation_var)
 
     model.obj = Objective(rule=obj_rule, sense=minimize)
 
@@ -242,10 +241,8 @@ def get_results(solution, model_instance, costs):
         solution_store_facility_allocation = solution_store_facility_allocation[
             solution_store_facility_allocation['VALUE'] != 0]
 
-        solution_costs = pd.Series(costs).reset_index()
-        solution_costs.rename(columns={'level_0': 'STORE', 'level_1': 'FACILITY', 0: 'COST'},
-                              inplace=True)
-
+        solution_costs = costs.copy()
+        solution_costs.rename(columns={'FACILITY_NAME': 'FACILITY', 'LOCATION_NAME': 'STORE'}, inplace=True)
         solution_store_facility_allocation = solution_store_facility_allocation.merge(solution_costs,
                                                                                       how='left',
                                                                                       on=['STORE', 'FACILITY'])
