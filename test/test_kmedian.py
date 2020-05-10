@@ -19,6 +19,7 @@ costs = data.test_cost_data
 from kmedian_geo.src import kmedian_inputs as kmi
 from kmedian_geo import kmedian as km
 
+
 class KMedianTest(unittest.TestCase):
 
     def test_kmedian_inputs(self):
