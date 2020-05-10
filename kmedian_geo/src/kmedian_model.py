@@ -151,9 +151,25 @@ def create_model_instance(model,
                           facility_min_elements,
                           facility_max_elements,
                           store_demand,
-                          facility_maximum_demand,
-                          k
+                          facility_maximum_demand
                           ):
+    '''
+    Create model instance
+    Args:
+        model ():
+        store_facility_allocation_var_input_set ():
+        facility_selection_var_input_set ():
+        stores_set ():
+        facilities_set ():
+        costs ():
+        facility_min_elements ():
+        facility_max_elements ():
+        store_demand ():
+        facility_maximum_demand ():
+
+    Returns:
+
+    '''
 
     data = {None: {
         'store_facility_allocation_var_input_set': {None: store_facility_allocation_var_input_set},
