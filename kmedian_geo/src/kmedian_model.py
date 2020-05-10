@@ -4,7 +4,7 @@ from pyomo.environ import *
 
 def create_abstract_model(enable_min_max_elements,
                           enable_max_demand):
-    '''
+    """
     Create the abstract model
     Args:
         enable_min_max_elements ():
@@ -12,7 +12,7 @@ def create_abstract_model(enable_min_max_elements,
 
     Returns:
 
-    '''
+    """
 
     model = AbstractModel(name="Network Flows Abstract Model")
 
@@ -34,13 +34,14 @@ def create_abstract_model(enable_min_max_elements,
 
     # model objective
     def obj_rule(model):
-        '''
+        """
         Objective function
         Args:
             model ():
 
         Returns:
-        '''
+
+        """
         return sum(model.costs[store, facility] * model.store_facility_allocation_var[store, facility] \
                    for store, facility in model.store_facility_allocation_var_input_set)
 
@@ -48,7 +49,7 @@ def create_abstract_model(enable_min_max_elements,
 
     # each store is allocated to one facility
     def store_allocation_rule(model, store):
-        '''
+        """
         Each store assigns to one facility
         Args:
             model ():
@@ -56,37 +57,38 @@ def create_abstract_model(enable_min_max_elements,
 
         Returns:
 
-        '''
+        """
         return quicksum(model.store_facility_allocation_var[store, :]) == 1
 
     model.store_allocation = Constraint(model.stores_set, rule=store_allocation_rule)
 
     # k number of facilities is selected
     def k_facilities_rule(model):
-        '''
+        """
         Select k facilities
         Args:
             model ():
 
         Returns:
 
-        '''
+        """
         return quicksum(model.facility_selection_var[:]) == model.k
 
     model.k_facilities = Constraint(rule=k_facilities_rule)
 
     # store can not allocated if facility is not selected
     def store_enablement_rule(model, store, facility):
-        '''
+        """
         Enable allocation if site is selected
         Args:
-            model ():
-            store ():
-            facility ():
+            model (): 
+            store (): 
+            facility (): 
 
         Returns:
 
-        '''
+        """
+
         return model.store_facility_allocation_var[store, facility] <= model.facility_selection_var[facility]
 
     model.store_enablement = Constraint(model.store_facility_allocation_var_input_set, rule=store_enablement_rule)
@@ -94,7 +96,7 @@ def create_abstract_model(enable_min_max_elements,
     if enable_min_max_elements:
         # minimum elements in facility
         def min_stores_rule(model, facility):
-            '''
+            """
             Minimum stores assigned
             Args:
                 model ():
@@ -102,14 +104,14 @@ def create_abstract_model(enable_min_max_elements,
 
             Returns:
 
-            '''
+            """
             return quicksum(model.store_facility_allocation_var[:, facility]) >= model.facility_min_elements[facility]
 
         model.min_stores = Constraint(model.facilities_set, rule=min_stores_rule)
 
         # maximum elements in facility
         def max_stores_rule(model, facility):
-            '''
+            """
             Max stores assigned
             Args:
                 model ():
@@ -117,7 +119,7 @@ def create_abstract_model(enable_min_max_elements,
 
             Returns:
 
-            '''
+            """
             return quicksum(model.store_facility_allocation_var[:, facility]) >= model.facility_max_elements[facility]
 
         model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
@@ -125,7 +127,7 @@ def create_abstract_model(enable_min_max_elements,
     # maximum demand in facility
     if enable_max_demand:
         def max_demand_rule(model, facility):
-            '''
+            """
             Max demand rule
             Args:
                 model ():
@@ -133,7 +135,7 @@ def create_abstract_model(enable_min_max_elements,
 
             Returns:
 
-            '''
+            """
             return sum(model.store_demand[store] * model.store_facility_allocation_var[store, facility]
                        for store in model.stores_set) <= model.facility_maximum_demand[facility]
 
@@ -153,7 +155,7 @@ def create_model_instance(model,
                           store_demand,
                           facility_maximum_demand
                           ):
-    '''
+    """
     Create model instance
     Args:
         model ():
@@ -169,7 +171,7 @@ def create_model_instance(model,
 
     Returns:
 
-    '''
+    """
 
     data = {None: {
         'store_facility_allocation_var_input_set': {None: store_facility_allocation_var_input_set},
@@ -187,10 +189,22 @@ def create_model_instance(model,
 
     return model_instance
 
+
 def solve_model(model_instance,
                 mip_gap,
                 solver_time_limit_mins,
                 solver='GLPK'):
+    """
+    Solve model
+    Args:
+        model_instance ():
+        mip_gap ():
+        solver_time_limit_mins ():
+        solver ():
+
+    Returns:
+
+    """
 
     if solver=='GLPK':
         # initiate GLPK
@@ -205,6 +219,16 @@ def solve_model(model_instance,
 
 
 def get_results(solution, model_instance, costs):
+    """
+    Get model results
+    Args:
+        solution ():
+        model_instance ():
+        costs ():
+
+    Returns:
+
+    """
 
     if solution.solver.termination_condition == TerminationCondition.optimal:
         print('Optimal solution is found')

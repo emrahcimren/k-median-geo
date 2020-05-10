@@ -12,7 +12,7 @@ def run_kmedian(stores,
                 mip_gap=0.01,
                 solver_time_limit_mins=2
                 ):
-    '''
+    """
     Running k-median model
     Args:
         stores ():
@@ -26,7 +26,7 @@ def run_kmedian(stores,
 
     Returns:
 
-    '''
+    """
 
     print('getting model inputs')
     mi = kmi.ModelInputs(stores,

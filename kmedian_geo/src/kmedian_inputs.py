@@ -16,30 +16,35 @@ class ModelInputs:
 
     @staticmethod
     def _create_parameter_dict(parameter_df, keys, value):
-        '''
+        """
         Function to create parameters dictionary
-        :param parameter_df:
-        :param keys:
-        :param value:
-        :return:
-        '''
+        Args:
+            parameter_df ():
+            keys ():
+            value ():
+
+        Returns:
+
+        """
         parameter_df = parameter_df.set_index(keys)
         return parameter_df[value].to_dict()
 
     def _create_store_facility_sets(self):
-        '''
+        """
         Store and facility set
-        :return:
-        '''
+        Returns:
+
+        """
         print('creating store facility sets')
         self.store_set = self.stores['LOCATION_NAME'].unique()
         self.facility_set = self.facilities['FACILITY_NAME'].unique()
 
     def _create_store_facility_allocation_var_input(self):
-        '''
+        """
         Function to create store facility allocation sets
-        :return:
-        '''
+        Returns:
+
+        """
         print('creating store facility allocation var')
         facilities_input = self.facilities.copy()
         facilities_input['key'] = 0
@@ -58,42 +63,47 @@ class ModelInputs:
                                                                                                       axis=1).tolist()
 
     def _create_facility_selection_var_input(self):
-        '''
+        """
         Function to create facility selection set
-        :return:
-        '''
+        Returns:
+
+        """
         print('creating facility selection var')
         self.facility_selection_var_input_set = self.facilities['FACILITY_NAME'].unique()
 
     def _create_facility_min_max_size(self):
-        '''
+        """
         Facility minimum and maximum number of elements
-        :return:
-        '''
+        Returns:
+
+        """
         print('creating facility min max elements')
         self.facility_min_elements = self._create_parameter_dict(self.facilities, ['FACILITY_NAME'], 'MINIMUM_ELEMENTS')
         self.facility_max_elements = self._create_parameter_dict(self.facilities, ['FACILITY_NAME'], 'MAXIMUM_ELEMENTS')
 
     def _create_facility_maximum_demand(self):
-        '''
+        """
         Facility maximum demand
-        :return:
-        '''
+        Returns:
+
+        """
         print('creating facility maximum demand')
         self.facility_maximum_demand = self._create_parameter_dict(self.facilities, ['FACILITY_NAME'], 'MAXIMUM_DEMAND')
 
     def _create_store_demand(self):
-        '''
+        """
         Store demand
-        :return:
-        '''
+        Returns:
+
+        """
         print('creating store demand')
         self.store_demand = self._create_parameter_dict(self.stores, ['LOCATION_NAME'], 'DEMAND_UNITS')
 
     def _create_costs(self):
-        '''
+        """
         Costs between
-        :return:
-        '''
+        Returns:
+
+        """
         print('creating costs')
         self.costs = self._create_parameter_dict(self.costs, ['LOCATION_NAME', 'FACILITY_NAME'], 'COST')
