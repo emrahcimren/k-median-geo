@@ -32,7 +32,7 @@ def run_kmedian(stores,
                          costs)
 
     print('formulating the abstract model')
-    model = pyo.create_abstract_model()
+    model = pyo.create_abstract_model(enable_maximum_demand_at_facility)
 
     print('getting model instance')
     model_instance = pyo.create_model_instance(model,
