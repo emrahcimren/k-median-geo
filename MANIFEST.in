@@ -1,1 +1,4 @@
 include requirements.txt
+include kmedian_geo/data/*.csv
+include kmedian_geo/data/*.pkl
+include kmedian_geo/solvers/*.exe

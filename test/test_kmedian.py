@@ -32,7 +32,7 @@ class KMedianTest(unittest.TestCase):
 
         self.assertTrue(len(mi.store_facility_allocation_var_input) > 0)
 
-    def test_run_kmedian(self):
+    def test_run_kmedian_cbc(self):
         """
         Test for core model formulation
         Returns:
@@ -45,7 +45,8 @@ class KMedianTest(unittest.TestCase):
                                        costs,
                                        k_list,
                                        mip_gap=0.01,
-                                       solver_time_limit_mins=2
+                                       solver_time_limit_mins=2,
+                                       solver='CBC'
                                        )
 
         self.assertTrue(len(final_results) > 0)

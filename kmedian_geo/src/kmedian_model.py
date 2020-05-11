@@ -1,5 +1,9 @@
 import pandas as pd
 from pyomo.environ import *
+from pyomo.opt import SolverFactory
+
+import os
+current_dir, this_filename = os.path.split(__file__)
 
 
 def create_abstract_model(enable_maximum_demand_at_facility):
@@ -205,6 +209,12 @@ def solve_model(model_instance,
 
         # solves and updates variables
         solution = optimize.solve(model_instance, tee=True)
+
+    elif solver == 'CBC':
+        # initiate CBC
+        optimize = SolverFactory('cbc', executable=os.path.join(current_dir,'../solvers/cbc.exe'))
+        solution = optimize.solve(model_instance, tee=True)
+
     else:
         raise Exception('No solver defined')
 
