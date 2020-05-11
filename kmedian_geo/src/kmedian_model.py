@@ -86,7 +86,8 @@ def create_abstract_model():
         Returns:
 
         """
-        return sum(model.store_facility_allocation_var[facility, store] for store in model.stores_by_facilities_set[facility]) >= \
+        return sum(model.store_facility_allocation_var[facility, store] for store in
+                   model.stores_by_facilities_set[facility]) >= \
                model.facility_min_elements[facility] * model.facility_selection_var[facility]
 
     model.min_stores = Constraint(model.facilities_set, rule=min_stores_rule)
@@ -102,7 +103,8 @@ def create_abstract_model():
         Returns:
 
         """
-        return sum(model.store_facility_allocation_var[facility, store] for store in model.stores_by_facilities_set[facility]) \
+        return sum(
+            model.store_facility_allocation_var[facility, store] for store in model.stores_by_facilities_set[facility]) \
                <= model.facility_max_elements[facility] * model.facility_selection_var[facility]
 
     model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
