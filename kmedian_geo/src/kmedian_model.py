@@ -211,6 +211,11 @@ def solve_model(model_instance,
         # initiate CBC
         optimize = SolverFactory('cbc', executable=os.path.join(current_dir, '../solvers/cbc.exe'))
         optimize.options['logLevel'] = 2
+        optimize.options['logLevel'] = 2
+
+    elif solver == 'SCIP':
+        # initiate CBC
+        optimize = SolverFactory('scip', executable=os.path.join(current_dir, '../solvers/scip.exe'))
 
     else:
         raise Exception('No solver defined')
