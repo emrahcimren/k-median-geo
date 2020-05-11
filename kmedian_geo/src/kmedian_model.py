@@ -123,7 +123,7 @@ def create_abstract_model():
         return sum(model.store_demand[store] * model.store_facility_allocation_var[facility, store]
                    for store in model.stores_by_facilities_set[facility]) <= model.facility_maximum_demand[facility]
 
-    model.max_demand = Constraint(model.facilities_set, rule=max_demand_rule)
+    #model.max_demand = Constraint(model.facilities_set, rule=max_demand_rule)
 
     return model
 
@@ -203,7 +203,7 @@ def solve_model(model_instance,
         optimize.options['tmlim'] = 60 * solver_time_limit_mins
 
         # solves and updates variables
-        solution = optimize.solve(model_instance)
+        solution = optimize.solve(model_instance, tee=True)
     else:
         raise Exception('No solver defined')
 
