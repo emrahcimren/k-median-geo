@@ -204,16 +204,16 @@ def solve_model(model_instance,
     if solver == 'GLPK':
         # initiate GLPK
         optimize = SolverFactory('glpk')
+        optimize.options["mipgap"] = mip_gap
+        optimize.options['tmlim'] = 60 * solver_time_limit_mins
 
     elif solver == 'CBC':
         # initiate CBC
         optimize = SolverFactory('cbc', executable=os.path.join(current_dir, '../solvers/cbc.exe'))
+        optimize.options['logLevel'] = 2
 
     else:
         raise Exception('No solver defined')
-
-    optimize.options["mipgap"] = mip_gap
-    optimize.options['tmlim'] = 60 * solver_time_limit_mins
 
     solution = optimize.solve(model_instance, tee=True)
 
