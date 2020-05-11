@@ -17,6 +17,8 @@ def create_abstract_model():
     model.facility_selection_var_input_set = Set(dimen=1)
     model.stores_set = Set(dimen=1)
     model.facilities_set = Set(dimen=1)
+    model.facilities_by_stores_set = Set(model.stores_set)
+    model.stores_by_facilities_set = Set(model.facilities_set)
 
     model.costs = Param(model.store_facility_allocation_var_input_set, within=Any)
     model.facility_min_elements = Param(model.facilities_set, within=Any)
@@ -54,7 +56,8 @@ def create_abstract_model():
         Returns:
 
         """
-        return quicksum(model.store_facility_allocation_var[store, :]) == 1
+        return sum(model.store_facility_allocation_var[facility, store] for facility in
+                   model.facilities_by_stores_set[store]) == 1
 
     model.store_allocation = Constraint(model.stores_set, rule=store_allocation_rule)
 
@@ -68,26 +71,9 @@ def create_abstract_model():
         Returns:
 
         """
-        return quicksum(model.facility_selection_var[:]) == model.k
+        return sum(model.facility_selection_var[facility] for facility in model.facilities_set) == model.k
 
     model.k_facilities = Constraint(rule=k_facilities_rule)
-
-    # store can not allocated if facility is not selected
-    def store_enablement_rule(model, store, facility):
-        """
-        Enable allocation if site is selected
-        Args:
-            model (): 
-            store (): 
-            facility (): 
-
-        Returns:
-
-        """
-
-        return model.store_facility_allocation_var[store, facility] <= model.facility_selection_var[facility]
-
-    #model.store_enablement = Constraint(model.store_facility_allocation_var_input_set, rule=store_enablement_rule)
 
     # minimum elements in facility
     def min_stores_rule(model, facility):
@@ -100,7 +86,8 @@ def create_abstract_model():
         Returns:
 
         """
-        return quicksum(model.store_facility_allocation_var[:, facility]) >= model.facility_min_elements[facility]*model.facility_selection_var[facility]
+        return sum(model.store_facility_allocation_var[facility, store] for store in model.stores_by_facilities_set[facility]) >= \
+               model.facility_min_elements[facility] * model.facility_selection_var[facility]
 
     model.min_stores = Constraint(model.facilities_set, rule=min_stores_rule)
 
@@ -115,7 +102,8 @@ def create_abstract_model():
         Returns:
 
         """
-        return quicksum(model.store_facility_allocation_var[:, facility]) <= model.facility_max_elements[facility]*model.facility_selection_var[facility]
+        return sum(model.store_facility_allocation_var[facility, store] for store in model.stores_by_facilities_set[facility]) \
+               <= model.facility_max_elements[facility] * model.facility_selection_var[facility]
 
     model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
 
@@ -130,7 +118,7 @@ def create_abstract_model():
         Returns:
 
         """
-        return sum(model.store_demand[store] * model.store_facility_allocation_var[store, facility]
+        return sum(model.store_demand[store] * model.store_facility_allocation_var[facility, store]
                    for store in model.stores_set) <= model.facility_maximum_demand[facility]
 
     model.max_demand = Constraint(model.facilities_set, rule=max_demand_rule)
@@ -143,6 +131,8 @@ def create_model_instance(model,
                           facility_selection_var_input_set,
                           stores_set,
                           facilities_set,
+                          facilities_by_stores_set,
+                          stores_by_facilities_set,
                           costs,
                           facility_min_elements,
                           facility_max_elements,
@@ -157,6 +147,8 @@ def create_model_instance(model,
         facility_selection_var_input_set ():
         stores_set ():
         facilities_set ():
+        facilities_by_stores_set ():
+        stores_by_facilities_set ():
         costs ():
         facility_min_elements ():
         facility_max_elements ():
@@ -172,6 +164,8 @@ def create_model_instance(model,
         'facility_selection_var_input_set': {None: facility_selection_var_input_set},
         'stores_set': {None: stores_set},
         'facilities_set': {None: facilities_set},
+        'facilities_by_stores_set': facilities_by_stores_set,
+        'stores_by_facilities_set': stores_by_facilities_set,
         'costs': costs,
         'facility_min_elements': facility_min_elements,
         'facility_max_elements': facility_max_elements,
@@ -200,7 +194,7 @@ def solve_model(model_instance,
 
     """
 
-    if solver=='GLPK':
+    if solver == 'GLPK':
         # initiate GLPK
         optimize = SolverFactory('glpk')
         optimize.options["mipgap"] = mip_gap

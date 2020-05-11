@@ -8,6 +8,8 @@ class ModelInputs:
 
         self._create_store_facility_sets()
         self._create_store_facility_allocation_var_input()
+        self._create_facilities_by_stores_set()
+        self._create_stores_by_facilities_set()
         self._create_facility_selection_var_input()
         self._create_facility_min_max_size()
         self._create_facility_maximum_demand()
@@ -39,6 +41,31 @@ class ModelInputs:
         self.store_set = self.stores['LOCATION_NAME'].unique()
         self.facility_set = self.facilities['FACILITY_NAME'].unique()
 
+    def _create_facilities_by_stores_set(self):
+        """
+        Facilities[store]
+        Returns:
+
+        """
+        print('creating facilities[stores] sets')
+        facilities_by_stores_set = self.costs[['FACILITY_NAME', 'LOCATION_NAME']].groupby(
+            ['LOCATION_NAME'], as_index=False).aggregate(
+            lambda x: x.tolist())
+        self.facilities_by_stores_set = self._create_parameter_dict(facilities_by_stores_set, ['LOCATION_NAME'], 'FACILITY_NAME')
+
+    def _create_stores_by_facilities_set(self):
+        """
+        Stores[facility]
+        Returns:
+
+        """
+        print('creating stores[facility] sets')
+        stores_by_facilities_set = self.costs[['FACILITY_NAME', 'LOCATION_NAME']].groupby(
+            ['FACILITY_NAME'], as_index=False).aggregate(
+            lambda x: x.tolist())
+        self.stores_by_facilities_set = self._create_parameter_dict(stores_by_facilities_set, ['FACILITY_NAME'], 'LOCATION_NAME')
+
+
     def _create_store_facility_allocation_var_input(self):
         """
         Function to create store facility allocation sets
@@ -46,7 +73,7 @@ class ModelInputs:
 
         """
         print('creating store facility allocation var')
-        self.store_facility_allocation_var_input = self.costs[['LOCATION_NAME', 'FACILITY_NAME']]
+        self.store_facility_allocation_var_input = self.costs[['FACILITY_NAME', 'LOCATION_NAME']]
         self.store_facility_allocation_var_input_set = self.store_facility_allocation_var_input.apply(tuple,
                                                                                                       axis=1).tolist()
 
@@ -94,4 +121,4 @@ class ModelInputs:
 
         """
         print('creating costs')
-        self.costs = self._create_parameter_dict(self.costs, ['LOCATION_NAME', 'FACILITY_NAME'], 'COST')
+        self.costs = self._create_parameter_dict(self.costs, ['FACILITY_NAME', 'LOCATION_NAME'], 'COST')
