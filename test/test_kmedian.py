@@ -51,6 +51,25 @@ class KMedianTest(unittest.TestCase):
 
         self.assertTrue(len(final_results) > 0)
 
+    def test_run_kmedian_glpk(self):
+        """
+        Test for core model formulation
+        Returns:
+
+        """
+        from kmedian_geo import kmedian as km
+        k_list = [3]
+        final_results = km.run_kmedian(stores,
+                                       facilities,
+                                       costs,
+                                       k_list,
+                                       mip_gap=0.01,
+                                       solver_time_limit_mins=2,
+                                       solver='GLPK'
+                                       )
+
+        self.assertTrue(len(final_results) > 0)
+
 
 if __name__ == '__main__':
     unittest.main()
