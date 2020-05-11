@@ -7,6 +7,7 @@ def run_kmedian(stores,
                 facilities,
                 costs,
                 k_list,
+                enable_maximum_demand_at_facility=False,
                 mip_gap=0.01,
                 solver_time_limit_mins=2
                 ):
@@ -17,6 +18,7 @@ def run_kmedian(stores,
         facilities ():
         costs ():
         k_list ():
+        enable_maximum_demand_at_facility ():
         mip_gap ():
         solver_time_limit_mins ():
 

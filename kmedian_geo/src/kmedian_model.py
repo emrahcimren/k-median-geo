@@ -2,11 +2,11 @@ import pandas as pd
 from pyomo.environ import *
 
 
-def create_abstract_model():
+def create_abstract_model(enable_maximum_demand_at_facility):
     """
     Create the abstract model
     Args:
-
+        enable_maximum_demand_at_facility():
     Returns:
 
     """
@@ -110,20 +110,21 @@ def create_abstract_model():
     model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
 
     # maximum demand in facility
-    def max_demand_rule(model, facility):
-        """
-        Max demand rule
-        Args:
-            model ():
-            facility ():
+    if enable_maximum_demand_at_facility:
+        def max_demand_rule(model, facility):
+            """
+            Max demand rule
+            Args:
+                model ():
+                facility ():
 
-        Returns:
+            Returns:
 
-        """
-        return sum(model.store_demand[store] * model.store_facility_allocation_var[facility, store]
-                   for store in model.stores_by_facilities_set[facility]) <= model.facility_maximum_demand[facility]
+            """
+            return sum(model.store_demand[store] * model.store_facility_allocation_var[facility, store]
+                       for store in model.stores_by_facilities_set[facility]) <= model.facility_maximum_demand[facility]
 
-    #model.max_demand = Constraint(model.facilities_set, rule=max_demand_rule)
+        model.max_demand = Constraint(model.facilities_set, rule=max_demand_rule)
 
     return model
 
