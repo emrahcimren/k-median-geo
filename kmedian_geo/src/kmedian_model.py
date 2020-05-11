@@ -2,13 +2,10 @@ import pandas as pd
 from pyomo.environ import *
 
 
-def create_abstract_model(enable_min_max_elements,
-                          enable_max_demand):
+def create_abstract_model():
     """
     Create the abstract model
     Args:
-        enable_min_max_elements ():
-        enable_max_demand ():
 
     Returns:
 
@@ -123,21 +120,20 @@ def create_abstract_model(enable_min_max_elements,
     model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
 
     # maximum demand in facility
-    if enable_max_demand:
-        def max_demand_rule(model, facility):
-            """
-            Max demand rule
-            Args:
-                model ():
-                facility ():
+    def max_demand_rule(model, facility):
+        """
+        Max demand rule
+        Args:
+            model ():
+            facility ():
 
-            Returns:
+        Returns:
 
-            """
-            return sum(model.store_demand[store] * model.store_facility_allocation_var[store, facility]
-                       for store in model.stores_set) <= model.facility_maximum_demand[facility]
+        """
+        return sum(model.store_demand[store] * model.store_facility_allocation_var[store, facility]
+                   for store in model.stores_set) <= model.facility_maximum_demand[facility]
 
-        model.max_demand = Constraint(model.facilities_set, rule=max_demand_rule)
+    model.max_demand = Constraint(model.facilities_set, rule=max_demand_rule)
 
     return model
 
@@ -210,8 +206,10 @@ def solve_model(model_instance,
         optimize.options["mipgap"] = mip_gap
         optimize.options['tmlim'] = 60 * solver_time_limit_mins
 
-    # solves and updates variables
-    solution = optimize.solve(model_instance)
+        # solves and updates variables
+        solution = optimize.solve(model_instance)
+    else:
+        raise Exception('No solver defined')
 
     return solution
 
