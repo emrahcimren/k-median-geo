@@ -44,8 +44,6 @@ class KMedianTest(unittest.TestCase):
                                        facilities,
                                        costs,
                                        k_list,
-                                       enable_min_max_elements=False,
-                                       enable_max_demand=False,
                                        mip_gap=0.01,
                                        solver_time_limit_mins=2
                                        )

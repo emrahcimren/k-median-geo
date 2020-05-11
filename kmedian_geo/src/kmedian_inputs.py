@@ -46,19 +46,7 @@ class ModelInputs:
 
         """
         print('creating store facility allocation var')
-        facilities_input = self.facilities.copy()
-        facilities_input['key'] = 0
-        facilities_input = facilities_input[['FACILITY_NAME', 'key']]
-
-        stores_input = self.stores.copy()
-        stores_input['key'] = 0
-        stores_input = stores_input[['LOCATION_NAME', 'key']]
-
-        self.store_facility_allocation_var_input = facilities_input.merge(stores_input, on=['key'])
-        self.store_facility_allocation_var_input.drop(['key'], 1, inplace=True)
-        self.store_facility_allocation_var_input = self.store_facility_allocation_var_input[
-            ['LOCATION_NAME', 'FACILITY_NAME']]
-
+        self.store_facility_allocation_var_input = self.costs[['LOCATION_NAME', 'FACILITY_NAME']]
         self.store_facility_allocation_var_input_set = self.store_facility_allocation_var_input.apply(tuple,
                                                                                                       axis=1).tolist()
 

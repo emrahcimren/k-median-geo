@@ -7,8 +7,6 @@ def run_kmedian(stores,
                 facilities,
                 costs,
                 k_list,
-                enable_min_max_elements=False,
-                enable_max_demand=False,
                 mip_gap=0.01,
                 solver_time_limit_mins=2
                 ):
@@ -19,8 +17,6 @@ def run_kmedian(stores,
         facilities ():
         costs ():
         k_list ():
-        enable_min_max_elements ():
-        enable_max_demand ():
         mip_gap ():
         solver_time_limit_mins ():
 
@@ -34,8 +30,7 @@ def run_kmedian(stores,
                          costs)
 
     print('formulating the abstract model')
-    model = pyo.create_abstract_model(enable_min_max_elements,
-                                      enable_max_demand)
+    model = pyo.create_abstract_model()
 
     print('getting model instance')
     model_instance = pyo.create_model_instance(model,
