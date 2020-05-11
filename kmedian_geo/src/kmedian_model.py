@@ -90,38 +90,37 @@ def create_abstract_model(enable_min_max_elements,
 
         return model.store_facility_allocation_var[store, facility] <= model.facility_selection_var[facility]
 
-    model.store_enablement = Constraint(model.store_facility_allocation_var_input_set, rule=store_enablement_rule)
+    #model.store_enablement = Constraint(model.store_facility_allocation_var_input_set, rule=store_enablement_rule)
 
-    if enable_min_max_elements:
-        # minimum elements in facility
-        def min_stores_rule(model, facility):
-            """
-            Minimum stores assigned
-            Args:
-                model ():
-                facility ():
+    # minimum elements in facility
+    def min_stores_rule(model, facility):
+        """
+        Minimum stores assigned
+        Args:
+            model ():
+            facility ():
 
-            Returns:
+        Returns:
 
-            """
-            return quicksum(model.store_facility_allocation_var[:, facility]) >= model.facility_min_elements[facility]
+        """
+        return quicksum(model.store_facility_allocation_var[:, facility]) >= model.facility_min_elements[facility]*model.facility_selection_var[facility]
 
-        model.min_stores = Constraint(model.facilities_set, rule=min_stores_rule)
+    model.min_stores = Constraint(model.facilities_set, rule=min_stores_rule)
 
-        # maximum elements in facility
-        def max_stores_rule(model, facility):
-            """
-            Max stores assigned
-            Args:
-                model ():
-                facility ():
+    # maximum elements in facility
+    def max_stores_rule(model, facility):
+        """
+        Max stores assigned
+        Args:
+            model ():
+            facility ():
 
-            Returns:
+        Returns:
 
-            """
-            return quicksum(model.store_facility_allocation_var[:, facility]) >= model.facility_max_elements[facility]
+        """
+        return quicksum(model.store_facility_allocation_var[:, facility]) <= model.facility_max_elements[facility]*model.facility_selection_var[facility]
 
-        model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
+    model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
 
     # maximum demand in facility
     if enable_max_demand:
