@@ -121,7 +121,7 @@ def create_abstract_model():
 
         """
         return sum(model.store_demand[store] * model.store_facility_allocation_var[facility, store]
-                   for store in model.stores_set) <= model.facility_maximum_demand[facility]
+                   for store in model.stores_by_facilities_set[facility]) <= model.facility_maximum_demand[facility]
 
     model.max_demand = Constraint(model.facilities_set, rule=max_demand_rule)
 
