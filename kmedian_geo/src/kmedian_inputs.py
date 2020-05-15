@@ -1,3 +1,6 @@
+import logging
+
+
 class ModelInputs:
 
     def __init__(self, stores, facilities, costs):
@@ -37,7 +40,7 @@ class ModelInputs:
         Returns:
 
         """
-        print('creating store facility sets')
+        logging.debug('creating store facility sets')
         self.store_set = self.stores['LOCATION_NAME'].unique()
         self.facility_set = self.facilities['FACILITY_NAME'].unique()
 
@@ -47,7 +50,7 @@ class ModelInputs:
         Returns:
 
         """
-        print('creating facilities[stores] sets')
+        logging.debug('creating facilities[stores] sets')
         facilities_by_stores_set = self.costs[['FACILITY_NAME', 'LOCATION_NAME']].groupby(
             ['LOCATION_NAME'], as_index=False).aggregate(
             lambda x: x.tolist())
@@ -59,12 +62,11 @@ class ModelInputs:
         Returns:
 
         """
-        print('creating stores[facility] sets')
+        logging.debug('creating stores[facility] sets')
         stores_by_facilities_set = self.costs[['FACILITY_NAME', 'LOCATION_NAME']].groupby(
             ['FACILITY_NAME'], as_index=False).aggregate(
             lambda x: x.tolist())
         self.stores_by_facilities_set = self._create_parameter_dict(stores_by_facilities_set, ['FACILITY_NAME'], 'LOCATION_NAME')
-
 
     def _create_store_facility_allocation_var_input(self):
         """
@@ -72,7 +74,7 @@ class ModelInputs:
         Returns:
 
         """
-        print('creating store facility allocation var')
+        logging.debug('creating store facility allocation var')
         self.store_facility_allocation_var_input = self.costs[['FACILITY_NAME', 'LOCATION_NAME']]
         self.store_facility_allocation_var_input_set = self.store_facility_allocation_var_input.apply(tuple,
                                                                                                       axis=1).tolist()
@@ -83,7 +85,7 @@ class ModelInputs:
         Returns:
 
         """
-        print('creating facility selection var')
+        logging.debug('creating facility selection var')
         self.facility_selection_var_input_set = self.facilities['FACILITY_NAME'].unique()
 
     def _create_facility_min_max_size(self):
@@ -92,7 +94,7 @@ class ModelInputs:
         Returns:
 
         """
-        print('creating facility min max elements')
+        logging.debug('creating facility min max elements')
         self.facility_min_elements = self._create_parameter_dict(self.facilities, ['FACILITY_NAME'], 'MINIMUM_ELEMENTS')
         self.facility_max_elements = self._create_parameter_dict(self.facilities, ['FACILITY_NAME'], 'MAXIMUM_ELEMENTS')
 
@@ -102,7 +104,7 @@ class ModelInputs:
         Returns:
 
         """
-        print('creating facility maximum demand')
+        logging.debug('creating facility maximum demand')
         self.facility_maximum_demand = self._create_parameter_dict(self.facilities, ['FACILITY_NAME'], 'MAXIMUM_DEMAND')
 
     def _create_store_demand(self):
@@ -111,7 +113,7 @@ class ModelInputs:
         Returns:
 
         """
-        print('creating store demand')
+        logging.debug('creating store demand')
         self.store_demand = self._create_parameter_dict(self.stores, ['LOCATION_NAME'], 'DEMAND_UNITS')
 
     def _create_costs(self):
@@ -120,5 +122,5 @@ class ModelInputs:
         Returns:
 
         """
-        print('creating costs')
+        logging.debug('creating costs')
         self.costs = self._create_parameter_dict(self.costs, ['FACILITY_NAME', 'LOCATION_NAME'], 'COST')

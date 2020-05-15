@@ -12,3 +12,7 @@ facilities_list = ['facility_15001', 'facility_15003', 'facility_15009']
 test_stores_data = stores[stores['LOCATION_NAME'].isin(stores_list)]
 test_facilities_data = facilities[facilities['FACILITY_NAME'].isin(facilities_list)]
 test_cost_data = costs[(costs['LOCATION_NAME'].isin(stores_list)) & (costs['FACILITY_NAME'].isin(facilities_list))]
+
+stores_large = pd.read_csv(os.path.join(current_dir, '../data/stores_large.csv'))
+facilities_large = pd.read_csv(os.path.join(current_dir, '../data/facilities_large.csv'))
+costs_large = pd.read_csv(os.path.join(current_dir, '../data/costs_large.csv'))

@@ -16,6 +16,10 @@ stores = data.test_stores_data
 facilities = data.test_facilities_data
 costs = data.test_cost_data
 
+stores = data.stores_large
+facilities = data.facilities_large
+costs = data.costs_large
+
 
 class KMedianTest(unittest.TestCase):
 

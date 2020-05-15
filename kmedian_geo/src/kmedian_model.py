@@ -1,4 +1,5 @@
 import pandas as pd
+import logging
 from pyomo.environ import *
 from pyomo.opt import SolverFactory
 
@@ -109,9 +110,25 @@ def create_abstract_model(enable_maximum_demand_at_facility):
         """
         return sum(
             model.store_facility_allocation_var[facility, store] for store in model.stores_by_facilities_set[facility]) \
-               <= model.facility_max_elements[facility] * model.facility_selection_var[facility]
+               <= model.facility_max_elements[facility]*model.facility_selection_var[facility]
 
-    model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
+    #model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
+
+    def facility_open_rule(model, facility, store):
+        """
+        Enable assignment only when facility is opened
+        Args:
+            model ():
+            facility ():
+            store ():
+
+        Returns:
+
+        """
+        if store in model.stores_by_facilities_set[facility]:
+            return model.store_facility_allocation_var[facility, store] <= model.facility_selection_var[facility]
+
+    model.facility_open = Constraint(model.facilities_set,  model.stores_set, rule=facility_open_rule)
 
     # maximum demand in facility
     if enable_maximum_demand_at_facility:
@@ -180,7 +197,7 @@ def create_model_instance(model,
         'facility_maximum_demand': facility_maximum_demand,
     }}
 
-    model_instance = model.create_instance(data)
+    model_instance = model.create_instance(data, report_timing=True)
 
     return model_instance
 
@@ -249,9 +266,9 @@ def get_results(solution, model_instance, costs):
     """
 
     if solution.solver.termination_condition == TerminationCondition.optimal:
-        print('Optimal solution is found')
+        logging.debug('Optimal solution is found')
 
-        print('Objective value = {}'.format(str(model_instance.obj.expr())))
+        logging.debug('Objective value = {}'.format(str(model_instance.obj.expr())))
 
         solution_store_facility_allocation = pd.Series(
             model_instance.store_facility_allocation_var.get_values()).reset_index()
