@@ -64,7 +64,8 @@ def run_kmedian(stores,
         solution = pyo.solve_model(model_instance,
                                    mip_gap,
                                    solver_time_limit_mins,
-                                   solver)
+                                   solver,
+                                   threads=8)
 
         print('getting results')
         solution_store_facility_allocation = pyo.get_results(solution, model_instance, costs)

@@ -188,7 +188,8 @@ def create_model_instance(model,
 def solve_model(model_instance,
                 mip_gap,
                 solver_time_limit_mins,
-                solver='GLPK'):
+                solver='GLPK',
+                threads=8):
     """
     Solve model
     Args:
@@ -209,17 +210,16 @@ def solve_model(model_instance,
 
     elif solver == 'CBC':
         # initiate CBC
-        optimize = SolverFactory('cbc', executable=os.path.join(current_dir, '../solvers/cbc.exe'))
+        optimize = SolverFactory('cbc')
         optimize.options['logLevel'] = 2
-        optimize.options["threads"] = 6
+        optimize.options["threads"] = threads
 
     elif solver == 'SCIP':
         # initiate CBC
-        optimize = SolverFactory('scip', executable=os.path.join(current_dir, '../solvers/scip.exe'))
+        optimize = SolverFactory('scip')
 
     else:
         raise Exception('No solver defined')
-
 
     solution = optimize.solve(model_instance, tee=True)
 
