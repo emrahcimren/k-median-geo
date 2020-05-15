@@ -211,7 +211,7 @@ def solve_model(model_instance,
         # initiate CBC
         optimize = SolverFactory('cbc', executable=os.path.join(current_dir, '../solvers/cbc.exe'))
         optimize.options['logLevel'] = 2
-        optimize.options['logLevel'] = 2
+        optimize.options["threads"] = 6
 
     elif solver == 'SCIP':
         # initiate CBC
@@ -220,7 +220,7 @@ def solve_model(model_instance,
     else:
         raise Exception('No solver defined')
 
-    optimize.options["threads"] = 6
+
     solution = optimize.solve(model_instance, tee=True)
 
     return solution
