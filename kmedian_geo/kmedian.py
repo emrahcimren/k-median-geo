@@ -11,6 +11,7 @@ def run_kmedian(stores,
                 mip_gap=0.01,
                 solver_time_limit_mins=2,
                 solver='GLPK',
+                threads=8
                 ):
     """
     Running k-median model
@@ -22,7 +23,8 @@ def run_kmedian(stores,
         enable_maximum_demand_at_facility ():
         mip_gap ():
         solver_time_limit_mins ():
-        solver (): 'GLPK', 'CBC'
+        solver (): 'GLPK', 'CBC', 'SCIP'
+        threads (): Number of cores used
 
     Returns:
 
@@ -65,7 +67,7 @@ def run_kmedian(stores,
                                    mip_gap,
                                    solver_time_limit_mins,
                                    solver,
-                                   threads=8)
+                                   threads)
 
         print('getting results')
         solution_store_facility_allocation = pyo.get_results(solution, model_instance, costs)
