@@ -220,6 +220,7 @@ def solve_model(model_instance,
     else:
         raise Exception('No solver defined')
 
+    optimize.options["threads"] = 6
     solution = optimize.solve(model_instance, tee=True)
 
     return solution
@@ -244,12 +245,12 @@ def get_results(solution, model_instance, costs):
 
         solution_store_facility_allocation = pd.Series(
             model_instance.store_facility_allocation_var.get_values()).reset_index()
-        solution_store_facility_allocation.rename(columns={'level_0': 'STORE', 'level_1': 'FACILITY', 0: 'VALUE'},
+        solution_store_facility_allocation.rename(columns={'level_0': 'FACILITY', 'level_1': 'STORE', 0: 'VALUE'},
                                                   inplace=True)
         solution_store_facility_allocation = solution_store_facility_allocation[
             solution_store_facility_allocation['VALUE'] != 0]
 
-        solution_costs = costs.copy()
+        solution_costs = costs.copy()[['FACILITY_NAME', 'LOCATION_NAME', 'COST']]
         solution_costs.rename(columns={'FACILITY_NAME': 'FACILITY', 'LOCATION_NAME': 'STORE'}, inplace=True)
         solution_store_facility_allocation = solution_store_facility_allocation.merge(solution_costs,
                                                                                       how='left',
