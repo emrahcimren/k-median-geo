@@ -11,7 +11,8 @@ def run_kmedian(stores,
                 mip_gap=0.01,
                 solver_time_limit_mins=2,
                 solver='GLPK',
-                threads=8
+                threads=8,
+                cbc_scip_solver_path=None
                 ):
     """
     Running k-median model
@@ -25,6 +26,7 @@ def run_kmedian(stores,
         solver_time_limit_mins ():
         solver (): 'GLPK', 'CBC', 'SCIP'
         threads (): Number of cores used
+        cbc_scip_solver_path (): cnc scip solver path
 
     Returns:
 
@@ -67,7 +69,8 @@ def run_kmedian(stores,
                                    mip_gap,
                                    solver_time_limit_mins,
                                    solver,
-                                   threads)
+                                   threads,
+                                   cbc_scip_solver_path)
 
         print('getting results')
         solution_store_facility_allocation = pyo.get_results(solution, model_instance, costs)
