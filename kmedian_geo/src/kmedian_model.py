@@ -214,9 +214,9 @@ def solve_model(model_instance,
     elif solver == 'CBC':
         # initiate CBC
         if cbc_scip_solver_path is not None:
-            optimize = SolverFactory('cbc')
+            optimize = SolverFactory('cbc', executable=r'{}\{}'.format(cbc_scip_solver_path, 'cbc.exe'))
         else:
-            optimize = SolverFactory('cbc', executable=cbc_scip_solver_path+'\cbc.exe')
+            optimize = SolverFactory('cbc')
 
         optimize.options['logLevel'] = 2
         optimize.options["threads"] = threads
@@ -224,9 +224,9 @@ def solve_model(model_instance,
     elif solver == 'SCIP':
         # initiate SCIP
         if cbc_scip_solver_path is not None:
-            optimize = SolverFactory('scip')
+            optimize = SolverFactory('scip', executable=r'{}\{}'.format(cbc_scip_solver_path, 'scip.exe'))
         else:
-            optimize = SolverFactory('scip', executable=cbc_scip_solver_path+'\scip.exe')
+            optimize = SolverFactory('scip')
 
     else:
         raise Exception('No solver defined')
