@@ -113,7 +113,7 @@ def create_abstract_model(enable_maximum_demand_at_facility):
             model.store_facility_allocation_var[facility, store] for store in model.stores_by_facilities_set[facility]) \
                <= model.facility_max_elements[facility]*model.facility_selection_var[facility]
 
-    #model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
+    model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
 
     def facility_open_rule(model, facility, store):
         """
