@@ -45,7 +45,7 @@ def run_kmedian(stores,
     log_file_name = '_'
 
     Path('{}\debug'.format(log_path)).mkdir(parents=True, exist_ok=True)
-    ls.set_logger(run_id, logging_file_path, log_file_name)
+    log_path = ls.set_logger(run_id, logging_file_path, log_file_name)
 
     logging.debug('getting model inputs')
     mi = kmi.ModelInputs(stores,
@@ -90,7 +90,8 @@ def run_kmedian(stores,
                                    solver_time_limit_mins,
                                    solver,
                                    threads,
-                                   cbc_scip_solver_path)
+                                   cbc_scip_solver_path
+                                   )
 
         logging.debug('getting results')
         solution_store_facility_allocation = pyo.get_results(solution, model_instance, costs)

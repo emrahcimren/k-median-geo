@@ -48,7 +48,7 @@ def set_logger(run_id, logging_file_path, file_name):
     debug_fhandler.setLevel(logging.DEBUG)
     warning_fhandler.setLevel(logging.WARNING)
 
-    return True
+    return debug_path / ('__' + file_name + '___' + run_id)
 
 
 def create_directory_structure(directory_path):

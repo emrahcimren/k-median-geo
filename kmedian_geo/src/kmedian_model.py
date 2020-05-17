@@ -1,5 +1,6 @@
 import pandas as pd
 import logging
+import pathlib
 from pyomo.environ import *
 from pyomo.opt import SolverFactory
 
@@ -76,7 +77,7 @@ def create_abstract_model(enable_maximum_demand_at_facility):
         Returns:
 
         """
-        return sum(model.facility_selection_var[facility] for facility in model.facilities_set) == model.k
+        return sum(model.facility_selection_var[facility] for facility in model.facilities_set) <= model.k
 
     model.k_facilities = Constraint(rule=k_facilities_rule)
 
@@ -112,7 +113,7 @@ def create_abstract_model(enable_maximum_demand_at_facility):
             model.store_facility_allocation_var[facility, store] for store in model.stores_by_facilities_set[facility]) \
                <= model.facility_max_elements[facility]*model.facility_selection_var[facility]
 
-    #model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
+    model.max_stores = Constraint(model.facilities_set, rule=max_stores_rule)
 
     def facility_open_rule(model, facility, store):
         """
@@ -221,16 +222,23 @@ def solve_model(model_instance,
     Returns:
 
     """
+    logging.debug("Using solver {}".format(solver))
 
     if solver == 'GLPK':
         # initiate GLPK
+        logging.debug("Initiating GLPK")
         optimize = SolverFactory('glpk')
+
+        logging.debug("Setting mipgap = ".format(str(mip_gap)))
         optimize.options["mipgap"] = mip_gap
+
+        logging.debug("Setting run time limit =".format(str(60 * solver_time_limit_mins)))
         optimize.options['tmlim'] = 60 * solver_time_limit_mins
 
     elif solver == 'CBC':
         # initiate CBC
         if cbc_scip_solver_path is not None:
+            logging.debug("Setting solver path to = {}".format(cbc_scip_solver_path, 'cbc.exe'))
             optimize = SolverFactory('cbc', executable=r'{}\{}'.format(cbc_scip_solver_path, 'cbc.exe'))
         else:
             optimize = SolverFactory('cbc')
@@ -241,6 +249,7 @@ def solve_model(model_instance,
     elif solver == 'SCIP':
         # initiate SCIP
         if cbc_scip_solver_path is not None:
+            logging.debug("Setting solver path to = {}".format(cbc_scip_solver_path, 'scip.exe'))
             optimize = SolverFactory('scip', executable=r'{}\{}'.format(cbc_scip_solver_path, 'scip.exe'))
         else:
             optimize = SolverFactory('scip')
@@ -248,7 +257,8 @@ def solve_model(model_instance,
     else:
         raise Exception('No solver defined')
 
-    solution = optimize.solve(model_instance, tee=True)
+    logging.debug("Optimizing model")
+    solution = optimize.solve(model_instance, tee=True, logfile="model.log")
 
     return solution
 
