@@ -129,7 +129,7 @@ def create_abstract_model(enable_maximum_demand_at_facility):
         if store in model.stores_by_facilities_set[facility]:
             return model.store_facility_allocation_var[facility, store] <= model.facility_selection_var[facility]
         else:
-            return 0
+            return Constraint.Skip
 
     model.facility_open = Constraint(model.facilities_set,  model.stores_set, rule=facility_open_rule)
 
