@@ -258,7 +258,7 @@ def solve_model(model_instance,
         raise Exception('No solver defined')
 
     logging.debug("Optimizing model")
-    solution = optimize.solve(model_instance, tee=True, keepfiles=True, logfile="model.log")
+    solution = optimize.solve(model_instance, tee=True, logfile="model.log")
 
     return solution
 
