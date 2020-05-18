@@ -5,5 +5,11 @@ RUN pip3 -q install pip --upgrade
 RUN mkdir k-median-geo
 WORKDIR k-median-geo/
 COPY . .
+ADD k-median-geo/* $HOME/k-median-geo/
 RUN pip3 install -r requirements.txt
 RUN python3 setup.py install
+
+EXPOSE 3000
+
+CMD [ "/bin/bash" ]
+# docker run -it ubuntu /bin/bash
