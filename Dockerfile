@@ -5,7 +5,7 @@ RUN pip3 -q install pip --upgrade
 RUN mkdir k-median-geo
 WORKDIR k-median-geo/
 COPY . .
-ADD k-median-geo/* $HOME/k-median-geo/
+ADD . ./* $home/kmedian_geo/
 RUN pip3 install -r requirements.txt
 RUN python3 setup.py install
 
