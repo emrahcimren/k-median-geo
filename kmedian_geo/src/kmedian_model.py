@@ -209,7 +209,7 @@ def solve_model(model_instance,
                 mip_gap,
                 solver_time_limit_mins,
                 solver='GLPK',
-                threads=8,
+                threads=3,
                 cbc_scip_solver_path=None):
     """
     Solve model
