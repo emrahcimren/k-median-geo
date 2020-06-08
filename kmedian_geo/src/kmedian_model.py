@@ -63,7 +63,7 @@ def create_abstract_model(enable_maximum_demand_at_facility):
 
         """
         return sum(model.store_facility_allocation_var[facility, store] for facility in
-                   model.facilities_by_stores_set[store]) >= 1
+                   model.facilities_by_stores_set[store]) == 1
 
     model.store_allocation = Constraint(model.stores_set, rule=store_allocation_rule)
 
